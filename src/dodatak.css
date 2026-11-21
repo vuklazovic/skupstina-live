@@ -1,0 +1,315 @@
+/* Dopune posle prvog velikog dana uživo (19. 11.): raspored strane /uzivo po veličini ekrana, traka ispod videa,
+   sakrivanje statistike/chata/reakcija, raniji dani u zaglavlju. Učitava se posle index.css (main.tsx). */
+
+/* ---------- učitavanje nije uspelo: poruka + dugme (strana i sama pokušava ponovo) ---------- */
+.fatal p { margin: 0 0 18px; max-width: 28ch; line-height: 1.25; }
+.fatal-btn { font: 600 15px/1 var(--f-body); letter-spacing: 0; padding: 12px 22px; border-radius: 999px; border: 1px solid var(--tungsten); background: none; color: var(--tungsten); cursor: pointer; }
+.fatal-btn:hover { background: rgba(255, 197, 107, 0.1); }
+
+/* ---------- zaglavlje: raniji dani kao padajući spisak (poslednja tri ostaju dugmad) ---------- */
+.day-switch .day-older { appearance: none; -webkit-appearance: none; border: 0; background: none; color: var(--ink-dim); font: inherit; font-size: 13px; font-weight: 600; padding: 6px 22px 6px 12px; border-radius: 999px; cursor: pointer; max-width: 132px; text-overflow: ellipsis;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 12px) 55%, calc(100% - 8px) 55%; background-size: 4px 4px; background-repeat: no-repeat; }
+.day-switch .day-older:hover { color: var(--ink); }
+.day-switch .day-older.on { background-color: var(--tungsten); color: var(--night); }
+.day-switch .day-older:focus-visible { outline: 2px solid var(--tungsten); outline-offset: 2px; }
+.day-switch .day-older option { color: #111; background: #fff; }
+@media (max-width: 760px) { .app.hall2 .day-switch .day-older { flex: none; font-size: 12px; padding: 4px 20px 4px 8px; } }
+
+/* ---------- /uzivo: atribut hidden mora da pobedi display iz rasporeda ---------- */
+.lv-left[hidden], .lv-right[hidden], .hm-tools[hidden], .hm-floats[hidden], .lv-tools[hidden] { display: none !important; }
+
+/* ---------- /uzivo: traka ispod videa (igračke više ne stoje preko YouTube kontrola) ---------- */
+.lv-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; min-width: 0; }
+.lv-tools .hm-tools { position: static; max-width: none; justify-content: flex-start; flex-wrap: wrap; gap: 6px; }
+.lv-tools .hm-toggle { background: rgba(233, 237, 244, 0.04); border-color: var(--line-2); backdrop-filter: none; padding: 6px 12px 6px 8px; min-height: 34px; }
+.lv-tools .hm-toggle.on { background: var(--tungsten); }
+.lv-tools .hm-toggle.heart.on { background: #e0243b; }
+.lv-tools .hm-toggle.flag.on { background: #0C4076; }
+.lv-tools .hm-toggle.snake.on { background: #2f6b3a; }
+.lv-tools.snake-on .hm-toggle:not(.snake) { display: none; }
+.lv-view { display: flex; gap: 2px; padding: 2px; border: 1px solid var(--line-2); border-radius: 999px; margin-left: auto; }
+.lv-view button { border: 0; background: none; color: var(--ink-dim); font: inherit; font-size: 12.5px; font-weight: 600; padding: 6px 11px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.lv-view button::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; border: 1.5px solid currentColor; vertical-align: 1px; }
+.lv-view button.on { color: var(--ink); background: rgba(233, 237, 244, 0.07); }
+.lv-view button.on::before { background: var(--tungsten); border-color: var(--tungsten); }
+.lv-view button:hover { color: var(--ink); }
+.lv-view button:focus-visible, .lv-tools .hm-toggle:focus-visible, .lv-lists button:focus-visible, .lv-last-btn:focus-visible { outline: 2px solid var(--tungsten); outline-offset: 2px; }
+
+/* ---------- /uzivo: sakrivena statistika ili chat = veći video ---------- */
+.lv-grid.no-left { grid-template-columns: minmax(0, 1fr) 360px; }
+.lv-grid.no-right { grid-template-columns: 320px minmax(0, 1fr); }
+.lv-grid.no-left.no-right { grid-template-columns: minmax(0, 1fr); }
+.lv-grid.no-left.no-right .lv-center { max-width: min(100%, calc((100svh - 300px) * 16 / 9)); margin: 0 auto; width: 100%; }
+
+/* ---------- /uzivo na užem prozoru (pola ekrana, tablet): video + chat, statistika ispod ---------- */
+@media (min-width: 761px) and (max-width: 1200px) {
+  .lv-grid { grid-template-columns: minmax(0, 1fr) clamp(260px, 32vw, 340px); }
+  .lv-grid .lv-center { grid-column: 1; grid-row: 1; }
+  .lv-grid .lv-right { grid-column: 2; grid-row: 1; max-height: calc(100svh - 110px); position: sticky; top: 8px; align-self: start; }
+  .lv-grid .lv-left { grid-column: 1 / -1; grid-row: 2; max-height: none; }
+  .lv-grid.no-right { grid-template-columns: minmax(0, 1fr); }
+  .lv-grid.no-left { grid-template-columns: minmax(0, 1fr) clamp(260px, 32vw, 340px); }
+  .lv-grid.no-left.no-right { grid-template-columns: minmax(0, 1fr); }
+  .lv-left .lv-stat { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 20px; }
+  .lv-left .lv-stat > .lv-tiles, .lv-left .lv-stat > .lv-note, .lv-left .lv-stat > .lv-more { grid-column: 1 / -1; }
+}
+
+/* ---------- /uzivo na telefonu: video, ko govori, pa odmah chat; utišavanje i statistika ispod ---------- */
+@media (max-width: 760px) {
+  .lv-grid, .lv-grid.no-left, .lv-grid.no-right, .lv-grid.no-left.no-right { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 8px 10px 16px; }
+  .lv-grid .lv-center { display: contents; }
+  .lv-grid .lv-video { order: 1; }
+  .lv-grid .lv-now { order: 2; }
+  .lv-grid .lv-tools { order: 3; }
+  .lv-grid .lv-right { order: 4; }
+  .lv-grid .lv-center .lv-mute { order: 5; }
+  .lv-grid .lv-left { order: 6; }
+  .lv-grid .lv-right { max-height: none; }
+  .lc-list { min-height: 200px; max-height: 46svh; }
+  /* traka: igračke samo kao ikonice (tekst zauzima pola reda), prikaz desno */
+  .lv-tools { gap: 6px; }
+  .lv-tools .hm-toggle { padding: 6px 9px; }
+  .lv-tools .hm-toggle:not(.on) > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .lv-view button { padding: 6px 8px; font-size: 12px; }
+  .lv-view button::before { margin-right: 4px; }
+  /* imena u spisku za utišavanje se ne skraćuju */
+  .lv-mp { padding: 9px 4px 9px 8px; }
+  .lv-mp > span { white-space: normal; overflow: visible; }
+  .lv-mp small { font-size: 11px; }
+}
+/* uspravan telefon: video ostaje pri vrhu dok se čita chat ili bira koga utišati */
+@media (max-width: 760px) and (orientation: portrait) {
+  /* zaglavlje sajta se na ovoj strani ne lepi za vrh (zauzelo bi trećinu ekrana zajedno sa videom) */
+  .app.hall2.live-view header.top { position: static; }
+  .lv-grid .lv-video { position: sticky; top: 0; z-index: 20; border-radius: 0 0 10px 10px; margin: 0 -10px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55); }
+}
+/* položen telefon: video preko cele širine bez okvira, ostalo ispod */
+@media (max-height: 520px) and (orientation: landscape) {
+  .lv-grid .lv-video { max-height: 100svh; margin: 0 auto; width: min(100%, calc(100svh * 16 / 9)); }
+}
+
+/* ---------- utišavanje cele liste + zvono ---------- */
+.lv-lists { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 12.5px; color: var(--ink-dim); }
+.lv-lists button { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line-2); background: none; color: var(--ink); border-radius: 999px; padding: 5px 10px; font: inherit; font-size: 12.5px; cursor: pointer; }
+.lv-lists button i { width: 9px; height: 9px; border-radius: 3px; background: var(--c); flex: none; }
+.lv-lists button small { color: var(--ink-dim); font-size: 11px; }
+.lv-lists button:hover { border-color: var(--tungsten); }
+.lv-lists button.off { border-color: var(--tungsten); color: var(--tungsten); background: rgba(255, 197, 107, 0.08); text-decoration: line-through; text-decoration-color: rgba(255, 197, 107, 0.6); }
+.lv-ding { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; cursor: pointer; color: var(--ink-dim); white-space: nowrap; }
+.lv-ding input { accent-color: var(--tungsten); width: 15px; height: 15px; }
+@media (max-width: 760px) { .lv-ding { margin-left: 0; flex-basis: 100%; } }
+
+/* ---------- poslednji govori: klik otvara ceo sažetak i vezu ka govoru ---------- */
+.lv-last-btn { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 0; color: inherit; font: inherit; line-height: 1.35; cursor: pointer; }
+.lv-last-btn:hover small { color: var(--ink); }
+.lv-last li.open small { display: block; -webkit-line-clamp: unset; overflow: visible; color: var(--ink); }
+.lv-last-go { display: inline-block; margin-top: 4px; font-size: 12.5px; color: var(--tungsten); }
+
+/* ---------- chat: sklanjanje obaveštenja i glasanja, sakrivanje nadimka ---------- */
+.lc-sticky, .lc-poll-q { position: relative; }
+.lc-fold { position: absolute; top: 2px; right: 2px; width: 30px; height: 30px; display: grid; place-items: center; border: 0; background: none; color: inherit; opacity: 0.65; font-size: 20px; line-height: 1; cursor: pointer; border-radius: 50%; }
+.lc-fold:hover { opacity: 1; background: rgba(0, 0, 0, 0.12); }
+.lc-sticky p, .lc-poll-q b { padding-right: 26px; }
+.lc-poll-mini { display: flex; align-items: baseline; gap: 8px; width: 100%; text-align: left; border: 0; border-bottom: 1px solid var(--line); background: rgba(233, 237, 244, 0.03); color: var(--ink-dim); font: inherit; font-size: 12.5px; padding: 7px 14px; cursor: pointer; }
+.lc-poll-mini b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink); font-weight: 600; }
+.lc-poll-mini em { font-style: normal; color: var(--tungsten); }
+.lc-nick { cursor: pointer; }
+.lc-nick:hover { text-decoration: underline; text-underline-offset: 2px; }
+.lc-picker .lc-block { font-size: 12px !important; font-weight: 600; color: var(--ink-dim); padding: 0 8px !important; width: auto !important; transform: none !important; }
+.lc-picker .lc-block:hover { color: #ff8a8a; }
+.lc-blocked button { border: 0; background: none; padding: 0; color: var(--tungsten); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+/* telefon: glasanje ne sme da pojede ekran (polje za poruku ostaje dostupno) */
+@media (max-width: 760px) {
+  .lc-poll { flex-direction: row; flex-wrap: wrap; gap: 6px; padding: 8px 10px; }
+  .lc-poll > .lc-poll-q, .lc-poll > .lc-poll-note, .lc-poll > .lc-poll-res { flex: 1 1 100%; }
+  .lc-poll > .lc-poll-opt { flex: 1 1 auto; text-align: center; padding: 8px 12px; }
+  .lc-poll-q b { font-size: 13.5px; }
+  .lc-form input { font-size: 16px; } /* iPhone ne zumira stranu kad polje ima bar 16 px */
+  .lc-name { font-size: 16px !important; }
+}
+
+/* ---------- zaglavlje između telefona i velikog ekrana: ništa se ne lomi slovo po slovo ---------- */
+.app.hall2 .session-title .eyebrow, .app.hall2 .agenda .eyebrow { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (min-width: 761px) { .app.hall2 .session-title { min-width: 150px; } }
+@media (max-width: 1500px) { .app.hall2 .top .help-btn { display: none; } }
+/* uži prozor (pola ekrana, tablet): dani i „ko govori” prelaze u drugi red zaglavlja, kao na telefonu */
+@media (min-width: 761px) and (max-width: 1100px) {
+  .app.hall2 header.top { flex-wrap: wrap; row-gap: 8px; height: auto; }
+  .app.hall2 .top .session-title { flex: 1 1 200px; }
+  .app.hall2 .top .day-col { order: 10; flex: 1 1 100%; max-width: 100%; }
+}
+.app.hall2 .agenda { overflow: hidden; }
+.app.hall2 .agenda > span { max-width: 100%; }
+
+/* ---------- društvene mreže: „Zaprati nas” (components/Mreze.tsx) ---------- */
+.mz { max-width: 980px; margin: clamp(50px, 9vh, 100px) auto 0; padding: 0 clamp(16px, 4vw, 48px); text-align: center; }
+.mz .eyebrow { color: var(--tungsten); }
+.mz h2 { margin: 10px 0 14px; font-family: var(--f-display); font-stretch: 78%; font-weight: 800; font-size: clamp(28px, 3vw, 44px); line-height: 1; }
+.mz > p { margin: 0 auto 26px; max-width: 640px; font-size: 16px; line-height: 1.55; color: rgba(233,237,244,.78); text-wrap: pretty; }
+.mz-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; text-align: left; max-width: 760px; margin: 0 auto; }
+.mz-card {
+  display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; gap: 4px 14px; align-items: center;
+  padding: 16px 18px; border-radius: 16px; border: 1px solid var(--line-2); background: rgba(255,255,255,.04);
+  color: var(--ink); text-decoration: none; transition: transform .15s, border-color .15s, background .15s;
+}
+.mz-card:hover { transform: translateY(-2px); border-color: var(--mz, var(--tungsten)); background: rgba(255,255,255,.07); }
+.mz-card:focus-visible { outline: 2px solid var(--tungsten); outline-offset: 2px; }
+.mz-card.tiktok { --mz: #25f4ee; }
+.mz-card.instagram { --mz: #f56040; }
+.mz-card.x { --mz: #e9edf4; }
+.mz-card.mejl { --mz: var(--tungsten); }
+.mz-cta { overflow-wrap: anywhere; }
+.ct-mejl { margin-top: 6px; }
+.ct-mejl a { color: var(--tungsten); }
+.mz-ic { grid-row: span 2; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: rgba(255,255,255,.08); color: var(--ink); }
+.mz-card:hover .mz-ic { color: var(--mz); }
+.mz-ic svg { width: 22px; height: 22px; }
+.mz-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.mz-txt b { font-size: 16px; }
+.mz-txt small { font-size: 12.5px; color: var(--ink-dim); line-height: 1.35; }
+.mz-cta { grid-column: 2; font-size: 12.5px; font-weight: 650; color: var(--tungsten); }
+@media (max-width: 760px) {
+  .mz-list { grid-template-columns: 1fr; }
+}
+
+.mz-row { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 12px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-dim); }
+.mz-row span { margin-right: 4px; }
+.mz-row a { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line-2); color: var(--ink); }
+.mz-row a:hover { border-color: var(--tungsten); color: var(--tungsten); }
+.mz-row svg { width: 15px; height: 15px; }
+.mz-row + .lv-contact { border-top: 0; padding-top: 0; }
+
+/* ---------- početna: putokaz (web/src/traka/Putokaz.tsx): put sa šest stanica; na telefonu ide odozgo nadole ---------- */
+.ld-put-kicker { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; font-family: var(--f-display); font-stretch: 88%; font-weight: 600; font-size: 12.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-dim); }
+.ld-put-kicker::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--onair); box-shadow: 0 0 10px var(--onair); }
+.ld-put h2 { margin-bottom: 14px; }
+/* putokaz je odmah ispod prvog odeljka: brojke posle njega dobijaju razmak koji inače daje taj odeljak */
+.ld-put + .ld-stats { margin-top: clamp(40px, 7vh, 80px); }
+.ld-put h2 span { color: var(--ink-dim); }
+.ld-put-lead { max-width: 720px; margin: 0 0 34px; font-size: clamp(15px, 1.15vw, 17.5px); line-height: 1.55; color: rgba(233, 237, 244, 0.8); }
+.ld-put-lead b { color: var(--ink); font-weight: 650; }
+.ld-put-faze { display: grid; grid-template-columns: repeat(6, 1fr); row-gap: 34px; margin: 0; padding: 0; list-style: none; }
+.ld-put-faze > li { position: relative; padding: 34px 22px 0 0; }
+.ld-put-faze > li::before { content: ''; position: absolute; left: 0; right: 0; top: 8px; height: 2px; background: rgba(233, 237, 244, 0.28); }
+.ld-put-faze > li::after { content: ''; position: absolute; left: 0; top: 0; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; background: #0b0f17; border: 3px solid rgba(233, 237, 244, 0.85); }
+.ld-put-faze > li.sad::before { background: linear-gradient(90deg, var(--onair), rgba(233, 237, 244, 0.28) 60%); }
+.ld-put-faze > li.sad::after { background: var(--onair); border-color: var(--onair); box-shadow: 0 0 22px 5px rgba(255, 59, 63, 0.5); }
+.ld-put-faze > li.cilj::before { right: auto; width: 0; }
+.ld-put-faze > li.cilj::after { background: var(--tungsten); border-color: var(--tungsten); box-shadow: 0 0 22px 5px rgba(255, 197, 107, 0.45); }
+.ld-put-st { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-family: var(--f-mono); font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-dim); }
+.ld-put-st b { color: var(--ink); font-weight: 600; }
+.ld-put-st em { font-style: normal; padding: 1px 7px; border-radius: 999px; background: rgba(255, 59, 63, 0.16); letter-spacing: 0.06em; }
+.ld-put-faze > li.sad .ld-put-st, .ld-put-faze > li.sad .ld-put-st b { color: #ff6a6f; }
+.ld-put-faze > li.cilj .ld-put-st, .ld-put-faze > li.cilj .ld-put-st b { color: var(--tungsten); }
+.ld-put-faze h3 { margin: 9px 0 11px; font-family: var(--f-display); font-stretch: 78%; font-weight: 800; font-size: clamp(19px, 1.55vw, 25px); line-height: 1.04; text-transform: uppercase; }
+.ld-put-faze ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.ld-put-faze ul li { position: relative; padding-left: 13px; font-size: 13.5px; line-height: 1.38; color: rgba(233, 237, 244, 0.7); }
+.ld-put-faze ul li::before { content: ''; position: absolute; left: 0; top: 0.55em; width: 5px; height: 5px; border-radius: 50%; background: #566072; }
+.ld-put-dno { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 34px 0 0; font-family: var(--f-display); font-stretch: 88%; font-weight: 600; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-dim); }
+@media (max-width: 1100px) {
+  .ld-put-faze { grid-template-columns: repeat(3, 1fr); }
+  .ld-put-faze > li:nth-child(3)::before { right: 22px; }
+}
+@media (max-width: 620px) {
+  .ld-put-lead { margin-bottom: 26px; }
+  .ld-put-faze { grid-template-columns: 1fr; row-gap: 0; }
+  .ld-put-faze > li { padding: 0 0 26px 34px; }
+  .ld-put-faze > li::before, .ld-put-faze > li:nth-child(3)::before { left: 8px; right: auto; top: 0; bottom: 0; width: 2px; height: auto; }
+  .ld-put-faze > li.sad::before { background: linear-gradient(180deg, var(--onair), rgba(233, 237, 244, 0.28) 60%); }
+  .ld-put-faze > li.cilj { padding-bottom: 0; }
+  .ld-put-faze > li.cilj::before { width: 0; }
+  .ld-put-faze h3 { font-size: 23px; }
+  .ld-put-faze ul li { font-size: 14.5px; }
+  .ld-put-dno { flex-direction: column; margin-top: 26px; }
+}
+
+/* ---------- /uzivo ceo ekran (kao Twitch/Kick): snimak + chat, chat ne prekriva snimak ----------
+   položeno: snimak što veći levo, chat dobija samo ostatak širine (bar 220 px); uspravno: snimak gore, chat ispod.
+   Telefon okrenut položeno ulazi u ovaj prikaz sam (LivePage). Dugme „Chat” sklanja chat i snimak se širi. */
+.lv-fs-btn, .lv-fsbar button {
+  display: grid; place-items: center; min-width: 40px; height: 40px; padding: 0 10px; border: 0; border-radius: 10px; cursor: pointer;
+  color: #fff; font: inherit; font-size: 13px; font-weight: 700; background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(8px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+.lv-fs-btn:hover, .lv-fsbar button:hover { background: rgba(0, 0, 0, 0.8); }
+.lv-fs-btn { position: absolute; top: 8px; right: 8px; z-index: 4; padding: 0; opacity: 0.85; }
+.lv-fsbar { position: absolute; top: 8px; right: 8px; z-index: 4; display: flex; gap: 6px; opacity: 0.8; }
+.lv-fsbar button.on { color: #0b0f17; background: var(--tungsten); box-shadow: none; }
+/* ko govori: mala oznaka gore levo (kartica „Sada govori” se u celom ekranu ne vidi) */
+.lv-fs-who {
+  position: absolute; left: 8px; top: 8px; z-index: 4; max-width: calc(100% - 140px); display: flex; align-items: center; gap: 7px;
+  padding: 5px 11px 5px 8px; border-radius: 10px; font-size: 13px; color: #fff; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); pointer-events: none;
+}
+.lv-fs-who i { flex: none; width: 4px; align-self: stretch; border-radius: 2px; background: var(--c); }
+.lv-fs-who b { min-width: 0; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lv-fs-who em { flex: none; font-style: normal; font-size: 11.5px; font-weight: 700; color: var(--tungsten); }
+.lv.fs .lv-muted-badge { display: none; }
+html:has(.lv.fs), html:has(.lv.fs) body { overflow: hidden; overscroll-behavior: none; }
+.lv.fs {
+  --vw: 100vw; --vh: 100dvh;
+  position: fixed; inset: 0; z-index: 1000; width: 100%; height: 100vh; height: 100dvh; min-height: 0; background: #000;
+}
+.lv.fs .lv-top, .lv.fs .lv-left, .lv.fs .lv-now, .lv.fs .lv-mute, .lv.fs .lv-tools, .lv.fs .lv-right > :not(.lc) { display: none !important; }
+/* raspored zadaju promenljive (--cols, --rows), da ga klase no-left/no-right ne nadjačaju */
+.lv.fs { --cols: minmax(0, 1fr) clamp(240px, 30vw, 380px); --rows: minmax(0, 1fr); }
+.lv.fs.fs-nochat { --cols: minmax(0, 1fr); }
+.lv.fs > .lv-grid { display: grid; height: 100%; padding: 0; gap: 0; grid-template-columns: var(--cols); grid-template-rows: var(--rows); }
+.lv.fs .lv-center { display: flex; align-items: center; justify-content: center; grid-column: 1; grid-row: 1; min-height: 0; max-width: none; margin: 0; }
+/* snimak 16:9, najveći koji staje u svoj deo */
+.lv.fs .lv-grid .lv-video {
+  position: relative; top: auto; flex: none; aspect-ratio: 16 / 9; height: auto; max-height: 100%; width: 100%; margin: 0; border-radius: 0; box-shadow: none;
+}
+.lv.fs .lv-grid .lv-right {
+  grid-column: 2; grid-row: 1; height: 100%; max-height: none; position: static; border: 0; border-left: 1px solid var(--line); border-radius: 0; background: #0b0f17;
+}
+.lv.fs .lc-list { min-height: 0; max-height: none; padding: 8px 10px; }
+/* polje za poruku zbijeno: nadimak i poruka u jednom redu, bez napomena */
+.lv.fs .lc-form { flex-direction: row; flex-wrap: wrap; padding: 8px; gap: 6px; }
+.lv.fs .lc-form .lc-name { flex: 0 1 34%; }
+.lv.fs .lc-form .lc-name:not(:placeholder-shown):not(:focus) { display: none; }
+.lv.fs .lc-form .lc-row { flex: 1 1 60%; min-width: 0; display: flex; gap: 6px; }
+.lv.fs .lc-form .lc-row .lc-text { flex: 1; min-width: 0; }
+.lv.fs .lc-form > .lv-note:not(.lc-blocked) { display: none; }
+.lv.fs .lv-chat-head { padding: 8px 12px; }
+@media (orientation: portrait) {
+  .lv.fs { --cols: minmax(0, 1fr); --rows: auto minmax(0, 1fr); }
+  .lv.fs.fs-nochat { --rows: minmax(0, 1fr); }
+  .lv.fs .lv-grid .lv-right { grid-column: 1; grid-row: 2; border-left: 0; border-top: 1px solid var(--line); }
+}
+/* položen telefon: snimak zauzima punu visinu (16:9 od visine ekrana), chat dobija ostatak, ali bar 220 px */
+@media (orientation: landscape) and (max-height: 500px) {
+  .lv.fs { --cols: minmax(0, calc(100dvh * 16 / 9)) minmax(220px, 1fr); }
+  .lv.fs.fs-nochat { --cols: minmax(0, 1fr); }
+  .lv.fs .lc-sticky { margin: 6px 6px 0; padding: 6px 30px 7px 10px; }
+  .lv.fs .lc-sticky p { font-size: 12.5px; }
+  .lv.fs .lc-msg { font-size: 13px; }
+  .lv.fs .lv-chat-head { display: none; }
+  .lv.fs .lc-form { padding: 6px; }
+  /* uzak chat: nadimak (dok nije upisan) u svom redu, poruka i „Pošalji” ispod */
+  .lv.fs .lc-form .lc-name { flex: 1 1 100%; }
+  .lv.fs .lc-form input { padding: 7px 9px; }
+  .lv.fs .lc-form .lc-row button { padding-left: 10px; padding-right: 10px; }
+  .lv.fs .lv-fsbar button, .lv.fs .lv-fs-btn { height: 34px; min-width: 34px; }
+  .lv.fs .lv-fs-who { font-size: 12px; padding: 4px 9px 4px 7px; }
+}
+
+/* ---------- /uzivo uspravan telefon (obična strana): snimak gore, ispod jedan red „ko govori”, pa chat do dna ekrana ----------
+   chat je visok koliko ostaje ispod zaglavlja (~92 px), snimka (56,25 vw) i reda „ko govori” (~100 px): bez listanja se vidi
+   snimak, ko govori i ceo chat sa poljem za poruku;
+   igračke, utišavanje i statistika su ispod chata */
+@media (max-width: 760px) and (orientation: portrait) {
+  .lv:not(.fs) .lv-grid .lv-now { order: 2; gap: 10px; padding: 8px 10px; border-radius: 10px; }
+  .lv:not(.fs) .lv-grid .lv-right { order: 3; height: calc(100svh - 92px - 56.25vw - 112px); min-height: 280px; }
+  .lv:not(.fs) .lv-grid .lv-tools { order: 4; }
+  .lv:not(.fs) .lc-list { min-height: 0; max-height: none; }
+  .lv:not(.fs) .lv-now .portrait, .lv:not(.fs) .lv-now img { width: 40px !important; height: 40px !important; }
+  .lv:not(.fs) .lv-now-txt b { font-size: 16px; }
+  .lv:not(.fs) .lv-now-txt > span:last-child { font-size: 12px; }
+  .lv:not(.fs) .lv-now-txt > span:last-child:not(:first-child):nth-child(3) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lv:not(.fs) .lv-now { flex-wrap: wrap; }
+  .lv:not(.fs) .lv-now-btns { flex-basis: 100%; display: flex; gap: 6px; }
+  /* polje za poruku: nadimak se sklanja kad je upisan; pravila u jednom redu */
+  .lv:not(.fs) .lc-form { padding: 8px 10px; gap: 6px; }
+  .lv:not(.fs) .lc-form .lc-name:not(:placeholder-shown):not(:focus) { display: none; }
+  .lv:not(.fs) .lc-form > .lv-note:not(.lc-blocked) { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; }
+}

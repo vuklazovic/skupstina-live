@@ -1,0 +1,51 @@
+[
+ {
+  "key": "studenti",
+  "name": "Studentska lista",
+  "full": "Studentska lista – Studenti pobeđuju",
+  "color": "#8FC3E6",
+  "seats": 140
+ },
+ {
+  "key": "svm",
+  "name": "Savez vojvođanskih Mađara",
+  "full": "Savez vojvođanskih Mađara – dr Balint Pastor",
+  "color": "#86C08A",
+  "seats": 2
+ },
+ {
+  "key": "albanci",
+  "name": "Albanska koalicija",
+  "full": "Albanska koalicija",
+  "color": "#D9798A",
+  "seats": 2
+ },
+ {
+  "key": "spp",
+  "name": "SPP",
+  "full": "Stranka pravde i pomirenja",
+  "color": "#B79BE0",
+  "seats": 1
+ },
+ {
+  "key": "sda",
+  "name": "SDA Sandžaka",
+  "full": "SDA Sandžaka",
+  "color": "#5FC4B8",
+  "seats": 1
+ },
+ {
+  "key": "ljajic",
+  "name": "Rasim Ljajić – Ljudski",
+  "full": "Rasim Ljajić – Ljudski (SDP – CDP)",
+  "color": "#E3C86A",
+  "seats": 1
+ },
+ {
+  "key": "avus",
+  "name": "Aleksandar Vučić – Ujedinjena Srbija",
+  "full": "Aleksandar Vučić – Ujedinjena Srbija",
+  "color": "#D9963F",
+  "seats": 103
+ }
+]

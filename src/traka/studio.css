@@ -1,0 +1,373 @@
+/* /dev, jedan dan: levo statistika (ili glasanje, ili praćeni govornik) i sala, u sredini snimak, desno tekst, dole traka */
+.pb-stage {
+  flex: 1; min-height: 0; display: grid; gap: clamp(12px, 1.4vw, 24px);
+  grid-template-columns: minmax(270px, 22%) minmax(0, 1fr) minmax(280px, 24%);
+  padding: 14px clamp(12px, 1.4vw, 24px) 0;
+}
+/* kolone imaju svoja imena (ne .tka-rail/.tka-lyrics), da ih pravila starog rasporeda u traka.css ne premeštaju */
+.pb-left {
+  grid-column: 1; grid-row: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 12px;
+  overflow-y: auto; padding-bottom: 16px; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+.pb-left .vc { max-height: none; overflow: visible; flex: none; }
+.pb-left .vc { padding: 14px 16px 16px; }
+.pb-left .vc h2 { font-size: 22px; }
+.pb-note { margin: 0; padding: 8px 12px; border-radius: 10px; font-size: 12.5px; color: var(--ink-dim); background: rgba(255, 255, 255, 0.06); }
+
+/* snimak staje ceo u kolonu i ostavlja početak sažetka na vidiku; lista se ceo srednji deo */
+.pb-mid { grid-column: 2; grid-row: 1; min-width: 0; min-height: 0; container-type: size; overflow-y: auto; scrollbar-width: none; }
+.pb-mid::-webkit-scrollbar { display: none; }
+.pb-mid-in { width: min(100cqw, calc((100cqh - 142px) * 16 / 9)); margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.pb-mid .tka-video { width: 100%; container-type: inline-size; }
+.pb-mid .tka-video, .pb-mid .tka-meta { flex: none; }
+.pb-mid .tka-meta { justify-content: center; align-items: center; }
+.pb-mid .tka-l3 b { font-size: clamp(17px, 2.2cqw, 26px); }
+.tka-l3 em { display: none; }
+.pb-sum { margin: 0; padding: 0 2px 16px; font-size: 14.5px; line-height: 1.55; color: rgba(233, 237, 244, 0.92); text-wrap: pretty; animation: tka-rise 0.4s ease both; }
+
+/* tačka dnevnog reda o kojoj se sada govori */
+.pb-ag { flex: none; display: flex; align-items: baseline; gap: 9px; min-width: 0; padding: 0 2px; font-size: 13.5px; }
+.pb-ag b {
+  flex: none; padding: 2px 8px; border-radius: 999px; font-family: var(--f-display); font-stretch: 85%; font-weight: 700; font-size: 11px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: #0b0f17; background: var(--tungsten);
+}
+.pb-ag span { min-width: 0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* dugme „Prati govornika” u redu sa podacima o govoru */
+.pb-follow {
+  padding: 4px 11px; border-radius: 999px; font-family: var(--f-body); font-size: 12px; font-weight: 700; letter-spacing: 0;
+  color: var(--ink); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+}
+.pb-follow:hover { background: rgba(255, 255, 255, 0.1); }
+.pb-follow.on { color: #0b0f17; background: var(--c, var(--tungsten)); box-shadow: none; }
+
+/* tekst govora: veličina slova prati širinu kolone */
+.pb-right { grid-column: 3; grid-row: 1; position: relative; min-width: 0; min-height: 0; container-type: inline-size; }
+.pb-right .ly { padding-right: 0; }
+.pb-right .ln { font-size: clamp(16px, 5.4cqw, 24px); line-height: 1.3; letter-spacing: -0.01em; margin-bottom: 0.5em; }
+.pb-right .ln.ln-now { transform: scale(1.01); }
+.pb-right .ln .w:hover::after { top: -1.5em; }
+
+/* ---------- titl preko snimka: najviše dva reda, izgovorene reči bele ---------- */
+.pb-subs {
+  position: absolute; left: 7%; right: 7%; bottom: 4.5%; margin: 0; text-align: center; pointer-events: none;
+  font-family: var(--f-body); font-weight: 650; font-size: clamp(14px, 2.5cqw, 40px); line-height: 1.28; letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+.pb-subs > span {
+  padding: 0.12em 0.45em; border-radius: 0.3em; background: rgba(6, 8, 12, 0.78);
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  display: -webkit-inline-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+}
+.pb-subs span span { color: rgba(255, 255, 255, 0.5); transition: color 0.12s; }
+.pb-subs span span.on { color: #fff; }
+/* sa titlom natpis „ko govori” ide gore, da se ne preklapaju */
+.pb-stage.subs .tka-l3 { bottom: auto; top: 10px; right: auto; max-width: 62%; }
+
+.pb-vbtns { position: absolute; right: 50px; bottom: 10px; display: flex; gap: 6px; }
+.pb-vbtns button {
+  height: 32px; min-width: 32px; padding: 0 11px; border-radius: 16px; display: grid; place-items: center;
+  font-size: 12px; font-weight: 700; color: rgba(255, 255, 255, 0.75); background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(8px);
+}
+.pb-vbtns button:hover { color: #fff; background: rgba(0, 0, 0, 0.75); }
+.pb-vbtns button.on { color: #0b0f17; background: rgba(255, 255, 255, 0.92); }
+.pb-stage.subs .pb-vbtns, .pb-stage.subs .tka-mute { bottom: auto; top: 10px; }
+
+/* ---------- levo: dve kocke (statistika dana, radnja koja traje ili praćeni govornik; pa sala) ---------- */
+.pb-stats h3, .pb-fw h3 { margin: 10px 0 5px; font-size: 11.5px; font-weight: 600; color: var(--ink-dim); }
+.pb-stats header + h3 { margin-top: 2px; }
+.pb-st-who { display: flex; align-items: center; gap: 10px; width: 100%; padding: 4px 5px; border-radius: 9px; text-align: left; }
+.pb-st-who:hover { background: rgba(255, 255, 255, 0.06); }
+.pb-st-t { flex: 1; min-width: 0; position: relative; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding-bottom: 6px; }
+.pb-st-t b { min-width: 0; font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pb-st-t small { flex: none; color: var(--ink-dim); }
+.pb-st-t em { position: absolute; left: 0; bottom: 0; height: 3px; border-radius: 2px; background: var(--c); }
+.pb-st-hint { margin: 6px 2px 0; font-size: 11px; line-height: 1.4; color: var(--ink-dim); }
+.pb-st-bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: rgba(255, 255, 255, 0.06); }
+.pb-st-bar i { height: 100%; }
+.pb-st-lists { display: flex; flex-direction: column; gap: 2px; margin-top: 8px; font-size: 12px; }
+.pb-st-lists > span { display: flex; align-items: center; gap: 7px; }
+.pb-st-lists i { flex: none; width: 8px; height: 8px; border-radius: 50%; }
+.pb-st-lists span span { flex: 1; min-width: 0; color: rgba(233, 237, 244, 0.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pb-st-lists b { font-weight: 600; }
+
+/* praćeni govornik: ko je, koliko je govorio i spisak svih njegovih govora */
+.pb-fw { display: flex; flex-direction: column; min-height: 0; max-height: 62%; border-color: color-mix(in srgb, var(--c) 55%, rgba(255, 255, 255, 0.1)); }
+.pb-fw header { margin-bottom: 4px; }
+.pb-fw header .eyebrow { color: color-mix(in srgb, var(--c) 60%, #fff); }
+.pb-fw-top { display: flex; align-items: center; gap: 11px; }
+.pb-fw-top .rc-q-ph { width: 46px; height: 46px; border-radius: 11px; }
+.pb-fw-top b { display: block; font-family: var(--f-display); font-stretch: 82%; font-weight: 700; font-size: 19px; line-height: 1.08; }
+.pb-fw-top small { display: block; margin-top: 2px; font-size: 12px; color: var(--ink-dim); }
+.pb-fw-nums { margin-top: 8px; color: rgba(233, 237, 244, 0.75); }
+.pb-fw-auto { display: flex; align-items: center; gap: 8px; margin: 8px 0 6px; font-size: 12.5px; cursor: pointer; }
+.pb-fw-auto input { width: 15px; height: 15px; accent-color: var(--tungsten); }
+.pb-fw-list { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; margin: 0 -6px; padding: 0 6px; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.2) transparent; }
+.pb-fw-list > div { display: flex; flex-direction: column; gap: 2px; }
+.pb-fw-list button { flex: none; display: flex; flex-direction: column; gap: 1px; width: 100%; padding: 6px 8px; border-radius: 9px; text-align: left; border-left: 3px solid color-mix(in srgb, var(--c) 45%, transparent); }
+.pb-fw-list button:hover { background: rgba(255, 255, 255, 0.07); }
+.pb-fw-list button.on { background: rgba(255, 255, 255, 0.1); border-left-color: #fff; }
+.pb-fw-list .mono { color: var(--tungsten); }
+.pb-fw-list button span:last-child:not(.mono) { font-size: 12.5px; line-height: 1.4; color: rgba(233, 237, 244, 0.82); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+
+/* ---------- traka: tačke dnevnog reda, praćeni govornik, vidljiviji klizač ---------- */
+.tkt-agenda { position: relative; height: 26px; border-bottom: 1px solid rgba(255, 255, 255, 0.07); background: rgba(0, 0, 0, 0.3); overflow: hidden; }
+.tkt-ag {
+  position: absolute; top: 3px; bottom: 3px; display: flex; align-items: center; padding: 0 9px; border-radius: 5px; overflow: hidden;
+  border-left: 3px solid var(--tungsten); background: rgba(255, 197, 107, 0.13); pointer-events: none;
+}
+.tkt-ag:nth-child(even) { background: rgba(255, 197, 107, 0.22); }
+.tkt-ag span { flex: none; font-size: 12px; line-height: 20px; font-weight: 600; white-space: nowrap; color: #fff1d2; }
+.tkt-ag span b { margin-right: 7px; font-weight: 700; color: var(--tungsten); }
+.tkt-track .tkt-clip.dim { opacity: 0.22; filter: saturate(0.3); }
+.tkt-track .tkt-clip.dim:hover { opacity: 0.6; }
+.tkt-follow { display: inline-flex; align-items: center; gap: 6px; padding: 3px 5px 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; color: #0b0f17; background: var(--tungsten); }
+.tkt-follow span { font-size: 15px; line-height: 1; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; background: rgba(0, 0, 0, 0.15); }
+.tka-studio .tkt-scroll { scrollbar-width: auto; scrollbar-color: rgba(255, 197, 107, 0.8) rgba(255, 255, 255, 0.09); padding-bottom: 2px; }
+
+/* ---------- ceo ekran: snimak preko svega; statistika i sala levo, tekst desno, naredni govori dole ---------- */
+.pb-stage.fs { display: block; padding: 0; background: #000; position: relative; --fl: clamp(280px, 21%, 400px); --fr: clamp(300px, 24%, 460px); }
+.pb-stage.fs.pseudo { position: fixed; inset: 0; z-index: 50; }
+.tka-root:has(.pb-stage.pseudo) .tka-top { display: none; }
+.pb-stage.fs.hide-stat.hide-sala { --fl: 0px; }
+.pb-stage.fs.hide-tekst { --fr: 0px; }
+.pb-stage.fs .pb-mid { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
+.pb-stage.fs .pb-mid-in { width: min(100cqw, calc(100cqh * 16 / 9)); gap: 0; }
+.pb-stage.fs .tka-video { border-radius: 0; box-shadow: none; }
+.pb-stage.fs .tka-meta, .pb-stage.fs .pb-sum, .pb-stage.fs .pb-ag, .pb-stage.fs .pb-vbtns, .pb-stage.fs .tka-mute { display: none; }
+.pb-stage.fs .tka-l3 { left: 50%; right: auto; transform: translateX(-50%); animation: none; max-width: 40%; }
+.pb-stage.fs .tka-l3 em { display: block; margin-top: 2px; font-style: normal; font-size: 11px; font-weight: 600; color: var(--tungsten); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pb-stage.fs .pb-left, .pb-stage.fs .pb-right { position: absolute; top: 0; bottom: 0; z-index: 2; }
+.pb-stage.fs .pb-left {
+  left: 0; width: var(--fl); padding: 64px 0 14px 18px; scrollbar-width: none;
+  background: linear-gradient(90deg, rgba(4, 6, 10, 0.72) 0%, rgba(4, 6, 10, 0.4) 70%, transparent 100%);
+}
+.pb-stage.fs .pb-left .rc, .pb-stage.fs .pb-left .vc { background: rgba(10, 13, 20, 0.74); }
+.pb-stage.fs .pb-right {
+  right: 0; width: var(--fr); padding: 0 22px 0 40px;
+  background: linear-gradient(270deg, rgba(4, 6, 10, 0.88) 0%, rgba(4, 6, 10, 0.62) 60%, transparent 100%);
+}
+.pb-stage.fs .pb-right .ly-wrap { left: 40px; right: 22px; }
+.pb-stage.fs.hide-stat .pb-left > :not(.rc-hall), .pb-stage.fs.hide-sala .pb-left > .rc-hall,
+.pb-stage.fs.hide-stat.hide-sala .pb-left, .pb-stage.fs.hide-tekst .pb-right, .pb-stage.fs.hide-red .pb-next { display: none; }
+/* dugmad za svaki prikaz (gore levo) */
+.pb-fsbar { position: absolute; left: 18px; top: 16px; z-index: 4; display: flex; gap: 5px; opacity: 0.6; transition: opacity 0.2s; }
+.pb-fsbar:hover, .pb-fsbar:focus-within { opacity: 1; }
+.pb-fsbar button {
+  height: 30px; padding: 0 12px; border-radius: 15px; font-size: 12px; font-weight: 700; white-space: nowrap;
+  color: rgba(255, 255, 255, 0.7); background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+.pb-fsbar button:hover { color: #fff; }
+.pb-fsbar button.on { color: #0b0f17; background: rgba(255, 255, 255, 0.92); box-shadow: none; }
+.pb-fsbar button.x { margin-left: 8px; }
+/* naredni govori (dole, između bočnih prikaza) */
+.pb-next {
+  position: absolute; z-index: 3; bottom: 14px; left: calc(var(--fl) + 22px); right: calc(var(--fr) + 22px);
+  display: flex; align-items: center; gap: 6px; padding: 7px 8px 7px 14px; border-radius: 16px; overflow: hidden;
+  background: rgba(8, 10, 15, 0.74); backdrop-filter: blur(18px); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+.pb-next .eyebrow { flex: none; margin-right: 6px; }
+.pb-next button { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 9px; padding: 5px 8px 5px 5px; border-radius: 11px; text-align: left; box-shadow: inset 3px 0 0 var(--c); }
+.pb-next button:hover { background: rgba(255, 255, 255, 0.1); }
+.pb-next button > span:last-child { min-width: 0; }
+.pb-next b { display: block; font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pb-next small { display: block; color: var(--ink-dim); white-space: nowrap; }
+.pb-next .rc-q-ph { margin-left: 4px; }
+/* titl stoji između bočnih prikaza i iznad narednih govora */
+.pb-stage.fs .pb-subs { left: calc(var(--fl) + 6%); right: calc(var(--fr) + 6%); bottom: 96px; font-size: clamp(16px, 1.9cqw, 34px); }
+.pb-stage.fs.hide-red .pb-subs { bottom: 5%; }
+
+/* ---------- niži ekrani (laptop 768 px i slično): snimak uzima skoro svu visinu, sažetak je odmah ispod listanjem ---------- */
+@media (max-height: 820px) {
+  .pb-mid-in { width: min(100cqw, calc((100cqh - 92px) * 16 / 9)); }
+}
+
+/* ---------- uži ekrani (tablet, mali laptop): snimak pa statistika i sala u levoj koloni koja se lista, tekst stoji desno ---------- */
+@media (max-width: 1100px) {
+  .pb-stage:not(.fs) {
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 34%); grid-template-rows: auto auto; align-content: start;
+    container-type: size; overflow-y: auto; scrollbar-width: none;
+  }
+  /* min-height: auto — red mreže mora da bude visok koliko i sadržaj, inače se snimak i statistika preklope */
+  .pb-stage:not(.fs) .pb-mid { grid-column: 1; grid-row: 1; container-type: inline-size; overflow: visible; min-height: auto; }
+  .pb-stage:not(.fs) .pb-mid-in { width: 100%; }
+  .pb-stage:not(.fs) .pb-left { grid-column: 1; grid-row: 2; overflow: visible; min-height: auto; }
+  .pb-stage:not(.fs) .pb-right { grid-column: 2; grid-row: 1 / span 2; position: sticky; top: 0; align-self: start; height: calc(100cqh - 14px); }
+  .pb-fw { max-height: none; }
+  .pb-fw-list { max-height: 52vh; }
+}
+
+/* ---------- telefon uspravno: snimak, tekst, pa statistika i sala; traka ostaje dole ---------- */
+@media (max-width: 760px) {
+  .pb-stage:not(.fs) { display: flex; flex-direction: column; padding: 8px 10px 0; gap: 10px; }
+  .pb-stage:not(.fs) .pb-mid { order: -2; flex: none; }
+  .pb-stage:not(.fs) .pb-right { order: -1; flex: none; position: relative; top: auto; align-self: stretch; height: 42vh; min-height: 220px; }
+  .pb-stage:not(.fs) .pb-left { flex: none; }
+  .pb-stage:not(.fs) .pb-mid .tka-meta { display: flex; }
+  .pb-fw-list { max-height: 46vh; }
+  .pb-ag span { white-space: normal; }
+  .pb-stage.fs { --fl: 0px; --fr: 0px; }
+  .pb-stage.fs .pb-left, .pb-stage.fs .pb-right { display: none; }
+  .pb-fsbar button:nth-child(-n + 3) { display: none; }
+  .pb-next button:nth-child(n + 4) { display: none; }
+}
+
+/* ---------- telefon položeno (vrlo nizak ekran): cela strana se lista; prvi ekran je snimak sa tekstom, traka je ispod ---------- */
+@media (max-height: 560px) and (min-width: 600px) {
+  .tka-root:has(.pb-stage) { display: block; height: auto; min-height: 100dvh; overflow: visible; }
+  .tka-root:has(.pb-stage) .tka-top { padding-top: 5px; padding-bottom: 5px; }
+  .tka-root:has(.pb-stage) .tka-studio { display: block; }
+  .pb-stage:not(.fs) {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 32%); grid-template-rows: auto auto;
+    container-type: normal; overflow: visible; padding: 8px 12px 0; gap: 10px 14px;
+  }
+  .pb-stage:not(.fs) .pb-mid { order: 0; grid-column: 1; grid-row: 1; container-type: inline-size; overflow: visible; }
+  .pb-stage:not(.fs) .pb-mid-in { width: min(100%, calc((100dvh - 96px) * 16 / 9)); }
+  .pb-stage:not(.fs) .pb-right { order: 0; grid-column: 2; grid-row: 1; position: relative; top: auto; height: calc(100dvh - 60px); min-height: 0; }
+  .pb-stage:not(.fs) .pb-left { grid-column: 1 / -1; grid-row: 2; flex-direction: row; flex-wrap: wrap; overflow: visible; }
+  .pb-stage:not(.fs) .pb-left > * { flex: 1 1 280px; min-width: 0; }
+  .pb-stage:not(.fs) .pb-sum { display: none; }
+}
+
+/* praćenje: prelazak na sledeći dan u kome govornik ima govor */
+.pb-fw-next { align-self: flex-start; margin: 0 0 8px; padding: 5px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 700; color: #0b0f17; background: var(--tungsten); }
+.pb-fw-next:hover { background: var(--tungsten-hot); }
+
+/* levo: ko sada govori (sažeto, bez duge biografije) i naredni govori */
+.pb-left .rc-who .rc-bio { display: none; }
+.pb-left .rc-who .rc-who-top img, .pb-left .rc-who .rc-who-top .ph { width: 46px; height: 46px; }
+.pb-left .rc-who .rc-who-top b { font-size: 18px; }
+.pb-left .rc-who dl { margin-top: 8px; font-size: 12px; }
+.pb-nx header { margin-bottom: 4px; }
+/* dugačka polja (npr. adresa kancelarije u „Mesto”) staju u dva reda */
+.pb-left .rc-who dd { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; }
+
+/* „Ko govori”: sledeći govori tog poslanika — istaknuta kocka u boji njegove liste */
+.pb-wn {
+  margin-top: 12px; padding: 10px 10px 8px; display: flex; flex-direction: column; gap: 4px; border-radius: 12px;
+  background: color-mix(in srgb, var(--c) 16%, rgba(255, 255, 255, 0.03)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 45%, transparent);
+}
+.pb-wn h3 { margin: 0 2px 3px; font-family: var(--f-display); font-stretch: 85%; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: color-mix(in srgb, var(--c) 55%, #fff); }
+.pb-wn button { display: flex; flex-direction: column; gap: 2px; width: 100%; padding: 7px 9px; border-radius: 9px; text-align: left; background: rgba(8, 10, 15, 0.45); transition: background 0.15s; }
+.pb-wn button:hover { background: rgba(8, 10, 15, 0.75); }
+.pb-wn .mono { font-size: 12px; font-weight: 600; color: var(--tungsten); }
+.pb-wn button span:last-child:not(.mono) { font-size: 13px; line-height: 1.4; color: rgba(233, 237, 244, 0.92); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pb-wn small { padding: 0 4px; font-size: 11.5px; color: rgba(233, 237, 244, 0.6); }
+.pb-wn button.day { background: rgba(255, 197, 107, 0.14); box-shadow: inset 0 0 0 1px rgba(255, 197, 107, 0.4); }
+.pb-wn button.day:hover { background: rgba(255, 197, 107, 0.24); }
+.pb-wn button.day b { color: var(--tungsten-hot); font-weight: 700; }
+
+/* ================= telefon: snimak je glavni ================= */
+/* dugme „Ceo tekst” postoji samo na telefonu (na većem ekranu tekst stoji desno) */
+.pb-txt { display: none; }
+@media (max-width: 760px) {
+  /* snimak od ivice do ivice i ostaje gore dok se lista; sve ostalo su redovi ispod njega:
+     tačka dnevnog reda, dugmad, (ceo tekst), sažetak, pa kartice i sala */
+  .pb-stage:not(.fs) { padding: 0 10px 0; gap: 8px; }
+  .pb-stage:not(.fs) .pb-mid, .pb-stage:not(.fs) .pb-mid-in { display: contents; }
+  .pb-stage:not(.fs) .tka-video { order: 1; position: sticky; top: 0; z-index: 6; width: auto; margin: 0 -10px; border-radius: 0; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55); }
+  .pb-stage:not(.fs) .pb-ag { order: 2; padding: 0 2px; font-size: 12.5px; }
+  .pb-stage:not(.fs) .pb-ag span { white-space: nowrap; }
+  .pb-stage:not(.fs) .pb-ag b { font-size: 10px; padding: 1px 7px; }
+  .pb-stage:not(.fs) .tka-meta { order: 3; gap: 6px; justify-content: flex-start; }
+  .pb-stage:not(.fs) .tka-meta > button { min-height: 34px; padding: 5px 12px; font-size: 12.5px; }
+  .pb-txt {
+    display: inline-flex; align-items: center; border-radius: 999px; font-weight: 700; letter-spacing: 0;
+    color: var(--ink); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  }
+  .pb-txt.on { color: #0b0f17; background: #fff; box-shadow: none; }
+  /* ceo tekst govora: sklonjen dok se ne otvori; otvoren je običan tekst za čitanje, ne velika slova kao na velikom ekranu */
+  .pb-stage:not(.fs) .pb-right { display: none; order: 4; height: 46vh; min-height: 200px; }
+  .pb-stage.txt:not(.fs) .pb-right { display: block; }
+  .pb-stage:not(.fs) .pb-right .ln { font-size: 16px; line-height: 1.5; letter-spacing: 0; margin-bottom: 0.7em; }
+  .pb-stage:not(.fs) .pb-right .ln.ln-now { transform: none; }
+  .pb-stage:not(.fs) .pb-sum { order: 5; flex: none; padding: 0 2px; font-size: 14px; }
+  .pb-stage:not(.fs) .pb-left { order: 6; }
+  /* titl na telefonu: manji, jedan do dva reda pri dnu */
+  .pb-stage:not(.fs) .pb-subs { left: 4%; right: 4%; bottom: 4%; font-size: clamp(13px, 3.9cqw, 18px); }
+  .pb-stage.subs:not(.fs) .tka-l3 { max-width: 58%; }
+  .pb-stage:not(.fs) .tka-l3 img { width: 26px; height: 26px; }
+  .pb-stage:not(.fs) .tka-l3 b { font-size: 14px; }
+  .pb-stage:not(.fs) .tka-l3 small { font-size: 10.5px; }
+  /* traka dole: niža (klipovi 64 px), bez reda tačaka (tačka je već ispod snimka) */
+  .tka-studio .tkt-body { --h-r: 18px; --h-track: 70px; }
+  .tka-studio .tkt-track .tkt-clip { top: 24px; bottom: 4px; }
+  .tka-studio .tkt-track .tkt-clip.chair { top: 34px; height: 20px; }
+  .tka-studio .tkt-track .tkt-vote::after { height: 50px; }
+  .tka-studio .tkt-clip-txt { top: 4px; }
+  .tka-studio .tkt-clip-txt small { display: none; }
+  .tka-studio .tkt-agenda { display: none; }
+  .tka-studio .tkt-ruler .tick span { top: 2px; font-size: 9.5px; }
+  .tka-studio .tkt-caps { display: none; }
+  .tka-studio .tkt-bar { padding: 4px 10px; }
+}
+
+/* telefon položeno: snimak preko cele visine (zaglavlje odlazi listanjem), titl na snimku; tekst i traka ispod */
+@media (max-height: 560px) and (min-width: 600px) {
+  .pb-stage:not(.fs) { grid-template-columns: minmax(0, 1fr); padding: 0 12px; }
+  .pb-stage:not(.fs) .pb-mid-in { width: min(100%, calc((100dvh - 8px) * 16 / 9)); }
+  .pb-stage:not(.fs) .pb-ag { display: none; }
+  .pb-stage:not(.fs) .pb-right { display: none; }
+  .pb-stage.txt:not(.fs) .pb-right { display: block; grid-column: 1; grid-row: 2; height: 70dvh; }
+  .pb-stage.txt:not(.fs) .pb-left { grid-row: 3; }
+  .pb-stage:not(.fs) .pb-right .ln { font-size: 17px; line-height: 1.5; }
+  .pb-txt { display: inline-flex; align-items: center; padding: 4px 11px; border-radius: 999px; font-size: 12px; font-weight: 700; color: var(--ink); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28); }
+  .pb-txt.on { color: #0b0f17; background: #fff; box-shadow: none; }
+}
+
+/* ================= telefon, ceo ekran ================= */
+@media (max-width: 760px), (max-height: 500px) {
+  .pb-fsbar { left: 10px; top: 10px; gap: 4px; opacity: 0.75; }
+  .pb-fsbar button { height: 30px; padding: 0 10px; font-size: 12px; background: rgba(0, 0, 0, 0.72); }
+  .pb-fsbar button.x { margin-left: 4px; }
+  .pb-stage.fs .pb-subs, .pb-stage.fs.hide-red .pb-subs { left: 6%; right: 6%; bottom: 4%; font-size: clamp(14px, 2.6cqw, 22px); }
+}
+/* položeno: natpis „ko govori” mali, gore desno (ne preko lica u sredini); naredni govori uži */
+@media (max-height: 500px) and (orientation: landscape), (max-width: 760px) and (orientation: landscape) {
+  .pb-stage.fs .tka-l3 { left: auto; right: 10px; top: 10px; transform: none; max-width: 36%; padding: 4px 8px 4px 4px; gap: 7px; }
+  .pb-stage.fs .tka-l3 img { width: 28px; height: 28px; }
+  .pb-stage.fs .tka-l3 b { font-size: 14px; }
+  .pb-stage.fs .tka-l3 small { font-size: 10.5px; }
+  .pb-stage.fs .tka-l3 em { display: none; }
+  .pb-next { left: 10px !important; right: 10px !important; bottom: 8px; padding: 4px 6px 4px 10px; }
+  .pb-next button:nth-child(n + 4) { display: none; }
+  .pb-next .rc-q-ph { width: 28px; height: 28px; }
+  .pb-stage.fs:not(.hide-red) .pb-subs { bottom: 74px; }
+}
+/* uspravno: snimak u sredini, natpis „ko govori” iznad snimka, titl krupno ispod njega (u crnom delu ekrana, ne preko snimka) */
+@media (max-width: 760px) and (orientation: portrait) {
+  .pb-stage.fs .tka-video { overflow: visible; }
+  .pb-stage.fs .tka-l3 { left: 12px; right: 12px; top: auto; bottom: calc(100% + 14px); transform: none; max-width: none; background: none; backdrop-filter: none; padding: 0; }
+  .pb-stage.fs .tka-l3 img { width: 44px; height: 44px; border-radius: 9px; }
+  .pb-stage.fs .tka-l3 b { font-size: 20px; }
+  .pb-stage.fs .tka-l3 small { font-size: 12.5px; }
+  .pb-stage.fs .tka-l3 em { font-size: 12px; white-space: normal; }
+  .pb-stage.fs .pb-subs, .pb-stage.fs.hide-red .pb-subs {
+    top: calc(100% + 18px); bottom: auto; left: 14px; right: 14px; font-size: 21px; line-height: 1.35; text-align: left;
+  }
+  .pb-stage.fs .pb-subs > span { padding: 0; background: none; -webkit-line-clamp: 3; }
+  .pb-next { left: 10px !important; right: 10px !important; bottom: 14px; }
+}
+
+/* ispod snimka samo dugmad; „Podeli citat” je glavni poziv: puna boja, sjaj i povremeni odsjaj */
+.tka-meta .pod-mini {
+  position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 16px 7px 13px; border: 0; border-radius: 999px;
+  font-family: var(--f-body); font-size: 13.5px; font-weight: 800; letter-spacing: 0; color: #1a1206;
+  background: linear-gradient(180deg, #ffd58a, var(--tungsten));
+  box-shadow: 0 6px 22px -6px rgba(255, 197, 107, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.tka-meta .pod-mini:hover { background: linear-gradient(180deg, #ffe2a8, var(--tungsten-hot)); transform: translateY(-1px); box-shadow: 0 10px 28px -6px rgba(255, 197, 107, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.55); }
+.tka-meta .pod-mini:active { transform: translateY(0); }
+.tka-meta .pod-mini::after {
+  content: ''; position: absolute; top: 0; bottom: 0; left: -40%; width: 30%; transform: skewX(-20deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  animation: pod-sjaj 5s ease-in-out 2s infinite;
+}
+@keyframes pod-sjaj { 0%, 78% { left: -40%; } 100% { left: 130%; } }
+@media (prefers-reduced-motion: reduce) { .tka-meta .pod-mini::after { animation: none; display: none; } }
+.tka-meta .pb-follow { font-family: var(--f-body); }
+@media (max-width: 760px) {
+  .pb-stage:not(.fs) .tka-meta > .pod-mini { padding: 7px 16px 7px 13px; font-size: 13.5px; }
+}

@@ -1,0 +1,114 @@
+{
+ "ukupno": [
+  {
+   "izraz": "Republike Srbije",
+   "puta": 71
+  },
+  {
+   "izraz": "studentske liste",
+   "puta": 71
+  },
+  {
+   "izraz": "Narodnoj skupštini",
+   "puta": 67
+  },
+  {
+   "izraz": "povredu poslovnika",
+   "puta": 63
+  },
+  {
+   "izraz": "Aleksandar Vučić",
+   "puta": 60
+  },
+  {
+   "izraz": "poslaničke grupe",
+   "puta": 57
+  },
+  {
+   "izraz": "građani Srbije",
+   "puta": 50
+  },
+  {
+   "izraz": "idemo dalje",
+   "puta": 41
+  }
+ ],
+ "govornici": [
+  {
+   "key": "ALEKSANDAR VUČIĆ",
+   "ime": "Aleksandar Vučić",
+   "reci": 32003,
+   "izrazi": [
+    {
+     "izraz": "vam kažem",
+     "puta": 32
+    },
+    {
+     "izraz": "Narodnoj skupštini",
+     "puta": 31
+    },
+    {
+     "izraz": "građani Srbije",
+     "puta": 26
+    }
+   ]
+  },
+  {
+   "key": "STOJAN RADENOVIĆ",
+   "ime": "Stojan Radenović",
+   "reci": 5629,
+   "izrazi": [
+    {
+     "izraz": "idemo dalje",
+     "puta": 38
+    },
+    {
+     "izraz": "povredu poslovnika",
+     "puta": 28
+    },
+    {
+     "izraz": "Aleksandar Vučić",
+     "puta": 20
+    }
+   ]
+  },
+  {
+   "key": "MILENKO JOVANOV",
+   "ime": "Milenko Jovanov",
+   "reci": 1890,
+   "izrazi": [
+    {
+     "izraz": "prvi put",
+     "puta": 7
+    },
+    {
+     "izraz": "društvenim mrežama",
+     "puta": 7
+    },
+    {
+     "izraz": "Aleksandar Vučić",
+     "puta": 6
+    }
+   ]
+  },
+  {
+   "key": "NEBOJŠA BAKAREC",
+   "ime": "Nebojša Bakarec",
+   "reci": 1496,
+   "izrazi": [
+    {
+     "izraz": "studentske liste",
+     "puta": 16
+    },
+    {
+     "izraz": "demokratske stranke",
+     "puta": 5
+    },
+    {
+     "izraz": "grupa građana",
+     "puta": 5
+    }
+   ]
+  }
+ ]
+}
